@@ -12,7 +12,7 @@ This document guides new team members through setting up the shared agentic guid
 ```bash
 # 1. Clone the guidelines repo (once per developer)
 cd ~/Documents/LocalProjects
-git clone https://github.com/BryanCamua/circle-v2-agentic-guidelines.git
+git clone https://github.com/CirclePOS/circle-v2-agentic-guidelines.git
 
 # 2. Symlink from your Circle V2 working repo
 cd ~/Documents/GitHub/Circle-v2-master4-deploy  # (or your branch)
@@ -44,7 +44,7 @@ mkdir -p ~/Documents/LocalProjects
 cd ~/Documents/LocalProjects
 
 # Clone (first time only)
-git clone https://github.com/BryanCamua/circle-v2-agentic-guidelines.git
+git clone https://github.com/CirclePOS/circle-v2-agentic-guidelines.git
 
 # Verify
 cd circle-v2-agentic-guidelines
@@ -161,7 +161,7 @@ git add .
 git commit -m "Clarify Hotwire system test pattern"
 git push origin improve/hotwire-testing-pattern
 
-# Create PR in GitHub: https://github.com/BryanCamua/circle-v2-agentic-guidelines
+# Create PR in GitHub: https://github.com/CirclePOS/circle-v2-agentic-guidelines
 # → Team lead reviews and merges
 ```
 
@@ -323,7 +323,7 @@ After setup, verify everything works:
 
 ## 📞 Support
 
-**Issue**: [Contact your team lead]  
+**Issue**: [Contact your Bryan]  
 **Suggestion**: Create PR in circle-v2-agentic-guidelines repo  
 **Emergency**: Use local `.claude/` config to override
 
