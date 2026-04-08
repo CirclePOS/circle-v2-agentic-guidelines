@@ -12,7 +12,7 @@ Shared coding agent configuration, standards, and workflows for Circle V2 develo
 
 ```bash
 # Quick version:
-git clone https://github.com/BryanCamua/circle-v2-agentic-guidelines.git ~/Documents/LocalProjects/circle-v2-agentic-guidelines
+git clone https://github.com/CirclePOS/circle-v2-agentic-guidelines.git ~/Documents/LocalProjects/circle-v2-agentic-guidelines
 cd ~/Documents/GitHub/Circle-v2-master4-deploy
 ln -s ~/Documents/LocalProjects/circle-v2-agentic-guidelines .claude-guidelines
 ```
