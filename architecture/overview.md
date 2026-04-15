@@ -4,8 +4,9 @@
 
 Circle V2 is a full-stack POS (Point of Sale) platform — a 3-in-1 system serving bookshop clients with a website, POS terminal, and inventory management.
 
-- **Backend:** Rails 8 app serving both legacy ERB views and a REST API (`/api/v1/`)
-- **Frontend:** Vue 3 TypeScript Turborepo monorepo in `app/vue3/` — two apps: backoffice (web) and pos (web + mobile via Capacitor)
+- **Backend:** Rails 8 app serving REST API (`/api/v1/`) and views
+- **Frontend (New):** **Hotwire** (Rails views with Turbo/Stimulus) — primary for new backoffice UI
+- **Frontend (Legacy):** Vue 3 TypeScript Turborepo monorepo in `app/vue3/` — two apps: backoffice (maintenance only) and pos (web + mobile via Capacitor)
 - **Mobile:** POS app via Capacitor (iOS/Android)
 
 ---

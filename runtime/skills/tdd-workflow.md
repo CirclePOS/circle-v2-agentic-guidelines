@@ -13,20 +13,30 @@ TDD enforces your CLAUDE.md "Plan Mode before code" rule by making tests the spe
 - Branch created and checked out
 - Plan posted as GitHub issue comment (per CLAUDE.md)
 - `.claude-guidelines/standards/testing-standards.md` loaded for this context
+- `IP-Pass` label applied to the Story (see `issue-workflow.md` Step 1d). RSpec *drafting* (Red phase) is permitted before `IP-Pass` to accelerate planning, but **no implementation code** until the label is applied.
 
 ## Workflow
 
-### 1. Write Specification Tests (Red Phase)
+### 1. Load Approved RSpec Scenarios
+
+Before writing any test code, confirm the approved scenarios from the handoff template.
+If no scenarios were approved (e.g., ad-hoc task without a handoff), plan them now following the business logic review in `issue-workflow.md` Step 1b.
+
+**Pre-writing checklist:**
+- [ ] Approved scenarios are listed in the handoff template or chat history
+- [ ] Each scenario tests correct system behavior, not tolerance of bad data
+- [ ] No scenario validates a nil/blank/invalid state that the system should prevent (see testing-standards.md: "Fix the Source, Not the Symptom")
+
+### 2. Write Specification Tests (Red Phase)
 
 **For Backend (RSpec):**
 ```bash
 # Create spec file in spec/{entity}/
 touch spec/commands/your_command_spec.rb
 
-# Write failing tests first:
-# - Happy path assertions
-# - Edge cases (nil, empty, invalid)
-# - Error scenarios
+# Write failing tests first — one example per approved scenario:
+# - Context matches the scenario's "Context"
+# - Expectation matches the scenario's "Expected behavior"
 ```
 
 **For Frontend (Cypress):**
@@ -44,8 +54,11 @@ touch spec-cypress/e2e/feature_name.cy.ts
 - [ ] Tests fail (red bar visible)
 - [ ] Tests specify actual behavior, not implementation
 - [ ] Both happy path AND edge cases covered
+- [ ] Every approved scenario has a corresponding test example
+- [ ] No spec asserts that bad data is acceptable when the fix should prevent it
+- [ ] If `IP-Pass` is not yet applied: stop at the Red phase. Do not proceed to Green.
 
-### 2. Write Implementation (Green Phase)
+### 3. Write Implementation (Green Phase)
 
 Only after tests are written and failing:
 
@@ -68,7 +81,7 @@ npm run test:unit  # If unit tests exist
 - [ ] No debugging code left behind
 - [ ] Follows code standards (validate via code-standards-check skill)
 
-### 3. Verify Against Full Suite (Refactor Phase)
+### 4. Verify Against Full Suite (Refactor Phase)
 
 Run regression tests before committing:
 
@@ -90,7 +103,7 @@ rubocop
 - [ ] No Pronto warnings
 - [ ] Code standards check passes (use code-standards-check skill)
 
-### 4. Create PR & Request Review
+### 5. Create PR & Request Review
 
 Link your tests to the specification:
 
@@ -120,6 +133,9 @@ Skip TDD for:
 ## Commands to Use
 
 - `/code-standards-check` — Validate standards before review
-- `/regression-tester` — Run full test suite classification
-- `/unit-tester` — Quick unit test validation
-- `/pr-helper` — Create PR after tests pass
+- `/unit-tester` — Unit test validation on changed files
+- `/ux-tester` — UX/accessibility validation (only if UI files changed)
+- `/uat-helper` — Merge to alpha4 and push (only after all local tests pass)
+- `/pr-helper` — Create PR immediately after alpha4 push
+
+**Note:** `/regression-tester` runs on CI only — do not run it locally. See `issue-workflow.md` Step 5.

@@ -399,7 +399,8 @@ end
 - [ ] System tests use `js: true` where needed
 - [ ] No console errors in browser (test locally)
 - [ ] `/code-standards-check` passes
-- [ ] Full regression test passes (`/regression-tester`)
+- [ ] `/unit-tester` passes for changed files
+- [ ] CI regression suite green (runs automatically after alpha4 push)
 
 ---
 

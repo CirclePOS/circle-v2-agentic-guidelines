@@ -8,8 +8,9 @@ Push the current feature branch to alpha4 for QA testing.
 **Pre-condition:** All sub-agents must have passed before running this:
 - `/code-standards-check` ✅
 - `/unit-tester` ✅
-- `/regression-tester` ✅
 - `/ux-tester` ✅ (if UI changed)
+
+(Full regression tests run automatically on CI after this push — no local regression step needed.)
 
 If any are unresolved, stop and fix before proceeding.
 

@@ -1,6 +1,6 @@
 ---
 name: unit-tester
-description: Run unit tests for changed files and write missing tests before proceeding to regression testing
+description: Run unit tests for changed files and write missing tests before pushing to alpha4
 ---
 
 Run unit tests for all files changed in this branch.
@@ -34,7 +34,7 @@ Write the minimum tests that validate the specific change made. Do not write bro
 ## Output
 
 If all tests pass:
-> ✅ Unit tests passed. Proceed to /regression-tester.
+> ✅ Unit tests passed for changed files. Ready to push to alpha4 — CI will run full regression suite automatically.
 
 If tests fail:
 > ❌ Unit test failures:
@@ -42,4 +42,4 @@ If tests fail:
 > - Failure: `<error message>`
 > - Fix: `<what to change in code or test>`
 
-Fix failures, re-run `/unit-tester`. Do not proceed to `/regression-tester` until clean.
+Fix failures, re-run `/unit-tester` until clean. Do not push to alpha4 with failing unit tests.

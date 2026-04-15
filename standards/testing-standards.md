@@ -2,6 +2,21 @@
 
 ## RSpec (Primary Test Framework)
 
+### Fix the Source, Not the Symptom
+
+Every spec must validate **correct system behavior**, not tolerance of bad data.
+
+**The rule:** If a value should never be nil/blank/invalid in production, the test must prove the system **prevents** that state — not that the system **survives** it.
+
+| Symptom-masking spec (WRONG) | Root-cause spec (RIGHT) |
+|------------------------------|------------------------|
+| `context "when country is nil"` / `it { is_expected.to be_nil }` | `context "when country is blank"` / `it "pre-fills from the website default"` |
+| `expect { subject }.not_to raise_error` (with invalid data) | `expect(record.country).to eq(website.country)` (data was corrected) |
+
+**When to add a nil-guard spec:** Only when nil is a *legitimate* business state (e.g., optional fields, soft-deleted records). If the field is required for the feature to function, the spec must prove the system fills or rejects the value — never that it silently accepts nil.
+
+**RSpec Scenario Planning:** Test scenarios are planned and approved in Step 1b of `issue-workflow.md` *before* any code is written. The handoff template includes the approved scenario list. Do not invent new scenarios during implementation without discussing first.
+
 ```bash
 bundle exec rspec                                           # full suite
 bundle exec rspec spec/models/site_feature_spec.rb         # single file
@@ -40,20 +55,22 @@ Unit tests for model methods follow a consistent structure:
 
 ```ruby
 describe "#country_representation" do
-  subject { described_class.new(country: country).country_representation }
+  subject { address.country_representation }
 
   context "when country is a valid ISO 3166 alpha2 code" do
-    let(:country) { "NZ" }
+    let(:address) { build(:address, country: "NZ") }
     it { is_expected.to eq "New Zealand" }
   end
 
-  context "when country is nil" do
-    let(:country) { nil }
-    it { is_expected.to be_nil }
+  context "when country is blank" do
+    let(:address) { build(:address, country: nil) }
+    it "falls back to the website default country" do
+      is_expected.to eq address.site.country
+    end
   end
 
   context "when country is a legacy free-text value" do
-    let(:country) { "New Zealand" }
+    let(:address) { build(:address, country: "New Zealand") }
     it { is_expected.to eq "New Zealand" }
   end
 end

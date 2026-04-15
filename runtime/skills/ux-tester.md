@@ -13,12 +13,16 @@ Load frontend standards:
 ## Trigger Condition
 
 Run `/ux-tester` if any of the following were changed:
-- `app/vue3/apps/backoffice/**`
-- `app/vue3/apps/pos/**`
-- `app/vue3/packages/components/**`
-- `app/components/**` (ViewComponent)
-- `app/javascript/controllers/**` (Stimulus)
-- `app/views/**`
+
+**Hotwire (New backoffice UI):**
+- `app/views/**` — Rails ERB templates
+- `app/components/**` — ViewComponent classes
+- `app/javascript/controllers/**` — Stimulus controllers
+
+**Vue 3 (Legacy maintenance):**
+- `app/vue3/apps/backoffice/**` — Backoffice Vue app
+- `app/vue3/apps/pos/**` — POS Vue app
+- `app/vue3/packages/components/**` — Shared Vue components
 
 ## Steps
 
@@ -39,14 +43,14 @@ cd app/vue3 && npx eslint .
 ### 3. UX review checklist
 
 For every changed UI component or view:
-- [ ] No hardcoded English strings — uses `t('validation.key')`
+- [ ] No hardcoded English strings — uses `t('validation.key')` (Vue) or Rails i18n
 - [ ] Error states are handled and displayed to the user
 - [ ] Loading states are shown where async operations occur
-- [ ] Form validation uses Zod schema — no ad hoc validation logic
+- [ ] Form validation follows standards (Hotwire: Rails validators; Vue: Vee-Validate + Zod schema)
 - [ ] Responsive layout not broken
 - [ ] No console errors introduced
-- [ ] Hotwire: ViewComponent renders correctly in `backoffice_hotwire` layout
-- [ ] New pages gated behind feature flag if not yet QA-approved
+- [ ] Hotwire: ViewComponent renders correctly in `backoffice_hotwire` layout with Turbo/Stimulus working
+- [ ] New Hotwire pages gated behind feature flag if not yet QA-approved
 
 ### 4. Cypress smoke check (if applicable)
 If the changed UI has existing Cypress tests:

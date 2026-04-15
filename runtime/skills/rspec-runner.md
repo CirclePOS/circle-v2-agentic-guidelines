@@ -37,18 +37,15 @@ xx passed, yy failed (shows which are new failures)
 BUNDLE_GEMFILE=gemfiles/rails8_0/Gemfile bundle exec rspec --tag focus
 ```
 
-### 3. Run Full Suite & Classify Failures
+### 3. Run Full Suite (Local Validation)
+
+For thorough local validation before pushing:
 
 ```bash
-# Step 1: Save baseline (run on clean master4)
-BUNDLE_GEMFILE=gemfiles/rails8_0/Gemfile bundle exec rspec --format json > /tmp/master4_tests.json
-
-# Step 2: Run your branch
-BUNDLE_GEMFILE=gemfiles/rails8_0/Gemfile bundle exec rspec --format json > /tmp/branch_tests.json
-
-# Step 3: Compare and classify
-# (Use regression-tester skill for automated classification)
+BUNDLE_GEMFILE=gemfiles/rails8_0/Gemfile bundle exec rspec
 ```
+
+**Note:** Full regression suite runs automatically on CI after alpha4 push. For pre-push validation, use `/unit-tester` to verify changed files only.
 
 ## When to Use Each
 
@@ -58,8 +55,8 @@ BUNDLE_GEMFILE=gemfiles/rails8_0/Gemfile bundle exec rspec --format json > /tmp/
 | **Debugging single failure** | `rspec spec/file_spec.rb:123 --format doc` |
 | **Test one command** | `rspec spec/commands/command_name_spec.rb` |
 | **Test one model** | `rspec spec/entities/entity_name_spec.rb` |
-| **Before committing** | `rspec` (full suite) or `/regression-tester` (with classification) |
-| **Pre-alpha4 push** | `/regression-tester` (identifies new vs pre-existing failures) |
+| **Before committing** | `rspec` (full suite locally) or `/unit-tester` (changed files only) |
+| **Pre-alpha4 push** | `/unit-tester` (validate changed files) — full regression runs on CI |
 
 ## Output Interpretation
 
@@ -88,16 +85,14 @@ XX examples, Y failures (0 new, Y pre-existing)
    BUNDLE_GEMFILE=gemfiles/rails8_0/Gemfile bundle exec rspec spec/your_spec.rb
    ```
 
-2. **Before commit**: Run full suite or use `/regression-tester`
+2. **Before commit**: Run full suite locally for confidence
    ```bash
    BUNDLE_GEMFILE=gemfiles/rails8_0/Gemfile bundle exec rspec
-   # OR
-   /regression-tester
    ```
 
-3. **Before alpha4 push**: Confirm no new failures
-   - Use `/regression-tester` for automated classification
-   - Or manually compare baseline vs branch
+3. **Before alpha4 push**: Use `/unit-tester` to validate changed files
+   - `/unit-tester` runs targeted tests for changed files only
+   - Full regression runs automatically on CI after alpha4 push
 
 ## Debugging Tips
 
@@ -123,6 +118,6 @@ BUNDLE_GEMFILE=gemfiles/rails8_0/Gemfile bundle exec rspec --profile
 
 ## See Also
 
-- `/regression-tester` — Full suite + failure classification (use before alpha4 push)
-- `/unit-tester` — Quick validation of changed files
+- `/unit-tester` — Targeted validation of changed files (use before alpha4 push)
 - `/tdd-workflow` — Red-Green-Refactor workflow
+- CI regression suite runs automatically after alpha4 push

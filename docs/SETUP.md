@@ -37,7 +37,7 @@ If not, add them.
 ### 4. Copy skills into `.claude/commands/`
 
 ```bash
-cp -r .claude-guidelines/skills/. .claude/commands/
+cp -r .claude-guidelines/runtime/skills/. .claude/commands/
 ```
 
 These are your slash commands (`/code-standards-check`, `/unit-tester`, etc.).

@@ -1,0 +1,54 @@
+{
+  "mcpServers": {
+    "github": {
+      "command": "gh",
+      "args": ["api"]
+    }
+  },
+  "codeReview": {
+    "enabled": true,
+    "strategy": "supplementary",
+    "scope": [
+      "code-standards-backend.md",
+      "code-standards-frontend.md",
+      "code-standards-hotwire.md",
+      "testing-standards.md"
+    ],
+    "triggers": {
+      "prComments": true,
+      "preCommit": false,
+      "manualInvoke": true
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; if [[ \"$f\" =~ \\.env ]]; then echo '{\"continue\": false, \"stopReason\": \"BLOCKED: Never edit .env8 directly. Use .env8.sample instead, then manually configure your environment.\"}'; fi; }",
+            "statusMessage": "Checking .env restrictions"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; if [[ \"$f\" =~ \\.(vue|ts|tsx)$ ]] && [[ ! \"$f\" =~ node_modules ]]; then cd app/vue3 && npm run lint:fix -- \"$f\" 2>/dev/null || true; fi; }",
+            "statusMessage": "Auto-formatting Vue/TypeScript file"
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; if [[ \"$f\" =~ \\.rb$ ]] && [[ ! \"$f\" =~ ^spec/ ]]; then bundle exec rubocop --autocorrect \"$f\" 2>/dev/null || true; fi; }",
+            "statusMessage": "Auto-formatting Ruby file with rubocop"
+          }
+        ]
+      }
+    ]
+  }
+}

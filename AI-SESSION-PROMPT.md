@@ -19,6 +19,7 @@ You are a Coding Agent for the Circle V2 codebase. Before doing anything else, r
 - Never trust Copilot suggestions — validate against our code standards before implementing
 - Never push to alpha4 with failing tests
 - Never merge your own PR
+- Never begin implementation (app code, branch push, sub-agents) without the `IP-Pass` label on the Story — see `issue-workflow.md` Step 1d
 
 ---
 
@@ -31,10 +32,11 @@ After implementing any code change, run these sub-agents in order.
 |------|-----------|-------------------|
 | 1 | `/code-standards-check` | Always — after every implementation |
 | 2 | `/unit-tester` | Always — after code standards pass |
-| 3 | `/regression-tester` | Always — after unit tests pass |
-| 4 | `/ux-tester` | Only if UI/frontend files were changed |
-| 5 | `/uat-helper` | Only after all above pass — pushes to alpha4 |
-| 6 | `/pr-helper` | Immediately after `/uat-helper` |
+| 3 | `/ux-tester` | Only if UI/frontend files were changed |
+| 4 | `/uat-helper` | Only after all above pass — merges to alpha4 and pushes |
+| 5 | `/pr-helper` | Immediately after `/uat-helper` |
+
+**Note:** `/regression-tester` runs automatically on CI after the alpha4 push. Do not run it locally.
 
 ---
 
@@ -70,29 +72,43 @@ Confirm you have read the three required files and are ready to receive a task.
 read @.claude-guidelines/workflow/issue-workflow.md
 read @.claude-guidelines/standards/code-standards-backend.md
 read @.claude-guidelines/standards/code-standards-frontend.md
+read @.claude-guidelines/standards/code-standards-hotwire.md
+read @.claude-guidelines/standards/testing-standards.md
 
-Plan approved in Chat. Skip Step 1. Start at Step 2.
+Plan and RSpec scenarios approved in Chat. Skip Step 1. Start at Step 2.
 
-Issue: <full GitHub issue URL>
-Branch: <developer-name>-<ticket-id>-<short-description>
+**Issue:** <full GitHub issue URL>
+**IP comment URL:** <GH comment URL with the approved IP>
+**IP-Pass confirmed:** <senior dev handle> / <date>
+**Branch:** <developer-name>-<ticket-id>-<short-description>
 
-Root cause:
+**Root cause:**
 <2-3 line summary of what is broken and why>
 
-Approved fix:
-<concise description of the approach — what files change and how>
+**Approved fix:**
+<approach — must address root cause, not symptom>
 
-Files to change:
+**Files to change:**
 - <file path 1> — <what changes>
 - <file path 2> — <what changes>
-- <file path 3> — <what changes>
 
-Sub-agent chain to run after implementation:
+**Approved RSpec scenarios:**
+1. CONTEXT: <starting state> → EXPECT: <what the system should do>
+2. CONTEXT: <starting state> → EXPECT: <what the system should do>
+
+**Business logic notes:**
+- <why this approach over alternatives>
+
+**Sub-agent chain to run after implementation:**
 1. /code-standards-check
 2. /unit-tester
-3. /regression-tester
-4. /ux-tester (only if UI/frontend files were changed)
-5. /uat-helper
-6. /pr-helper
+3. /ux-tester (only if UI/frontend files were changed)
+4. /uat-helper
+5. /pr-helper
 
-Do not re-investigate. Do not re-plan. Implement the approved fix.
+**Note:** /regression-tester runs on CI after alpha4 push — do not run locally.
+
+Do not start implementation unless `IP-Pass` is on the Story. If the label is missing, return to `issue-workflow.md` Step 1d.
+
+Write RSpec first (TDD), then implement the fix.
+Do not re-investigate. Do not re-plan. Do not deviate from approved scenarios.

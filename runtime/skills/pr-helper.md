@@ -41,9 +41,9 @@ Closes #<GITHUB_ISSUE_NUMBER>
 ## Testing
 - [ ] `/code-standards-check` passed
 - [ ] `/unit-tester` passed
-- [ ] `/regression-tester` passed
 - [ ] `/ux-tester` passed (if UI changed)
 - [ ] Pushed to alpha4 for QA
+- [ ] CI regression suite green (runs automatically after alpha4 push)
 EOF
 )"
 ```

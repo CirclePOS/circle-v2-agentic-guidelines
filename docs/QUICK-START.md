@@ -8,8 +8,8 @@
 
 | Task | Agent | Invocation |
 |------|-------|-----------|
-| **Backend feature** (Rails models, commands, APIs) | `backend-agent` | `--agent backend-agent` |
-| **Frontend UI** (Vue components, forms, Cypress) | `frontend-agent` | `--agent frontend-agent` |
+| **Backend feature** (Rails models, commands, APIs) | `backend-dev-agent` | `--agent backend-dev-agent` |
+| **Frontend UI** (Hotwire views + Stimulus; Vue bug fixes) | `frontend-dev-agent` | `--agent frontend-dev-agent` |
 | **Test issues** (RSpec failures, coverage, strategy) | `tester-agent` | `--agent tester-agent` |
 
 ---
@@ -19,17 +19,20 @@
 ### VS Code Extension
 1. Open VS Code
 2. Open Claude Code chat
-3. Click agent dropdown → Select `backend-agent` / `frontend-agent` / `tester-agent`
+3. Click agent dropdown → Select `backend-dev-agent` / `frontend-dev-agent` / `tester-agent`
 4. Type your task in the prompt
 5. Agent loads context + skills automatically
 
 ### CLI
 ```bash
 # Backend feature
-claude-code --agent backend-agent -p "Implement checkout command"
+claude-code --agent backend-dev-agent -p "Implement checkout command"
 
-# Frontend UI
-claude-code --agent frontend-agent -p "Create payment form with Vee-Validate"
+# Frontend UI (Hotwire - default for new UI)
+claude-code --agent frontend-dev-agent -p "Create payment method selection form using Hotwire"
+
+# Frontend maintenance (Vue legacy fix)
+claude-code --agent frontend-dev-agent -p "Fix form validation bug in POS backoffice cart"
 
 # Test issues
 claude-code --agent tester-agent -p "Why are checkout tests failing?"
@@ -55,7 +58,7 @@ Tasks:
 ✅ Build REST API endpoints
 ✅ Handle database operations
 ✅ Validate code against standards
-❌ Never touches Vue files (escalates to frontend-agent)
+❌ Never touches Vue files (escalates to frontend-dev-agent)
 ❌ Never touches Cypress tests (escalates to tester-agent)
 
 Skills:
@@ -67,16 +70,18 @@ Skills:
 ```
 
 ### 🎨 Frontend Agent
-**When to use**: Building Vue components, forms, handling UX
+**When to use**: Building new Hotwire UI (primary) or fixing existing Vue components (maintenance)
 
 ```
 Tasks:
+✅ Implement new backoffice UI with Hotwire (Rails views + Turbo/Stimulus)
 ✅ Write Cypress E2E tests (TDD)
-✅ Implement Vue 3 components
-✅ Create forms with Vee-Validate
+✅ Create forms (Hotwire or Vue)
+✅ Fix bugs in existing Vue 3 components (maintenance only)
 ✅ Handle component state & logic
 ✅ Check accessibility
-❌ Never modifies Rails code (escalates to backend-agent)
+❌ Never modifies Rails models/API code (escalates to backend-dev-agent)
+❌ Never creates new Vue features (use Hotwire for new UI)
 ❌ Never fixes RSpec tests (escalates to tester-agent)
 
 Skills:
@@ -117,12 +122,12 @@ Agents detect when work should go to another agent:
 
 **Backend → Frontend:**
 ```
-Backend Agent: "This needs a Vue component. Handing off to frontend-agent."
+Backend Agent: "This needs a Vue component. Handing off to frontend-dev-agent."
 ```
 
 **Frontend → Backend:**
 ```
-Frontend Agent: "API contract needs review. Handing off to backend-agent."
+Frontend Agent: "API contract needs review. Handing off to backend-dev-agent."
 ```
 
 **Either → Tester:**
@@ -132,7 +137,7 @@ Backend/Frontend Agent: "Need to analyze test coverage. Handing off to tester-ag
 
 **Tester → Backend/Frontend:**
 ```
-Tester Agent: "New RSpec failure detected in checkout. Escalating to backend-agent."
+Tester Agent: "New RSpec failure detected in checkout. Escalating to backend-dev-agent."
 ```
 
 ---
@@ -143,7 +148,7 @@ Tester Agent: "New RSpec failure detected in checkout. Escalating to backend-age
 
 ```
 You: "Add payment method dropdown to checkout form"
-     (Invoke: frontend-agent)
+     (Invoke: frontend-dev-agent)
 
 Frontend Agent:
 ├── Reads API spec from backend
@@ -153,12 +158,12 @@ Frontend Agent:
 └── "API call working? Need backend to finalize endpoint."
 
 You: "Confirm API endpoint exists"
-     (Invoke: backend-agent)
+     (Invoke: backend-dev-agent)
 
 Backend Agent:
 ├── Confirms endpoint exists
 ├── Runs /rspec-runner to verify backend tests pass
-└── "Good to go. Back to you frontend-agent."
+└── "Good to go. Back to you frontend-dev-agent."
 
 Frontend Agent:
 ├── Finalizes E2E test
@@ -175,10 +180,10 @@ Tester Agent:
 ├── Runs /regression-tester
 ├── Classifies failures: "3 new RSpec failures in Cart#calculate_total"
 ├── Identifies root cause
-└── "New failures introduced by recent code. Escalating to backend-agent."
+└── "New failures introduced by recent code. Escalating to backend-dev-agent."
 
 You: "Fix the cart calculation"
-     (Invoke: backend-agent)
+     (Invoke: backend-dev-agent)
 
 Backend Agent:
 ├── Reviews failing RSpec test
@@ -195,16 +200,16 @@ Tester Agent:
 
 ```
 You: "Implement new refund workflow"
-     (Invoke: backend-agent for API design)
+     (Invoke: backend-dev-agent for API design)
 
 Backend Agent:
 ├── Plan Mode: Design API endpoints
 ├── /tdd-workflow: Write RSpec tests
 ├── Implement: Commands, services, models
 ├── /code-standards-check: Validate code
-└── "API ready. Handing to frontend-agent for UI."
+└── "API ready. Handing to frontend-dev-agent for UI."
 
-You: (Switch to frontend-agent)
+You: (Switch to frontend-dev-agent)
 
 Frontend Agent:
 ├── Plan Mode: Design form/UI
@@ -274,7 +279,7 @@ You can also ask the agent questions:
 
 **"Agent hands off incorrectly"**
 - Manually invoke the right agent instead
-- Example: `--agent backend-agent` to override auto-detection
+- Example: `--agent backend-dev-agent` to override auto-detection
 
 **"Tests failing but I'm not sure why"**
 - Invoke tester-agent: `"Why are these tests failing?"`
@@ -286,10 +291,10 @@ You can also ask the agent questions:
 
 - **Setup Guide**: `.claude/SETUP-SUMMARY.md` — What was installed
 - **Agent Team**: `.claude/agents/AGENT-TEAM.md` — Team structure & hand-offs
-- **Backend Agent**: `.claude/agents/backend-agent.md` — Full specification
-- **Frontend Agent**: `.claude/agents/frontend-agent.md` — Full specification
+- **Backend Agent**: `.claude/agents/backend-dev-agent.md` — Full specification
+- **Frontend Agent**: `.claude/agents/frontend-dev-agent.md` — Full specification
 - **Tester Agent**: `.claude/agents/tester-agent.md` — Full specification
-- **TDD Skill**: `.claude-guidelines/skills/tdd-workflow.md` — Workflow guide
+- **TDD Skill**: `.claude-guidelines/runtime/skills/tdd-workflow.md` — Workflow guide
 - **Project Guide**: `CLAUDE.md` — Circle V2 project guidelines
 
 ---
@@ -300,7 +305,7 @@ Pick an agent and start building. Agents handle the rest.
 
 ```bash
 # Example:
-claude-code --agent backend-agent -p "Implement cart discount command with validation"
+claude-code --agent backend-dev-agent -p "Implement cart discount command with validation"
 ```
 
 Good luck! 🚀

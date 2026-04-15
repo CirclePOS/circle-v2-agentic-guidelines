@@ -22,13 +22,19 @@ Invoke agents for domain-specific work. Each agent loads its own context automat
 
 | Agent | When to Use | Invocation |
 |-------|-----------|-----------|
-| `backend-agent` | Rails APIs, commands, services, models | `claude-code --agent backend-agent` |
-| `frontend-agent` | **Hotwire** (primary) or Vue 3 bug fixes | `claude-code --agent frontend-agent` |
+| `backend-dev-agent` | Rails APIs, commands, services, models — **scoped implementation only** | `claude-code --agent backend-dev-agent` |
+| `frontend-dev-agent` | **Hotwire** (primary) or Vue 3 bug fixes — **scoped implementation only** | `claude-code --agent frontend-dev-agent` |
 | `tester-agent` | RSpec/Cypress strategy, failure triage, coverage | `claude-code --agent tester-agent` |
+| `flakey-test-resolver-agent` | Diagnose and permanently fix flaky tests | `claude-code --agent flakey-test-resolver-agent` |
+| `backend-pm-agent` | **Complex backend projects only** — breaks down stories, delegates to backend-dev-agent | `claude-code --agent backend-pm-agent` |
+| `frontend-pm-agent` | **Complex frontend projects only** — breaks down stories, delegates to frontend-dev-agent | `claude-code --agent frontend-pm-agent` |
+| `github-agent` | **Complex projects only** — Epic tracking, sub-issue management, project hygiene | `claude-code --agent github-agent` |
+
+> **Orchestration rule:** Invoke PM agents and full-team workflows **only for complex multi-story work**. For simple single-issue bug fixes, invoke `backend-dev-agent` or `frontend-dev-agent` directly. See `.claude-guidelines/runtime/agents/AGENT-TEAM.md` for full team structure and hand-off protocols.
 
 **Default behavior**: Agents detect when work should hand off to another agent. Load context files automatically. Use shared skill library.
 
-**More**: See `.claude-guidelines/agents/AGENT-TEAM.md` for team structure, hand-off protocols, and workflows.
+**More**: See `.claude-guidelines/runtime/agents/AGENT-TEAM.md` for team structure, hand-off protocols, and workflows.
 
 ## Code-Review Plugin (Supplementary)
 
@@ -69,7 +75,7 @@ Automatic code review analysis (runs alongside skills, never blocks workflow).
 
 > **This file is the single CLAUDE.md for this project.** The root `CLAUDE.md` is a stub that points here. Do not create or maintain a second CLAUDE.md.
 
-Use the skills in `.claude-guidelines/skills/` at each stage. These override Superpowers equivalents (e.g. do not substitute `superpowers:test-driven-development` for `tdd-workflow`).
+Use the skills in `.claude-guidelines/runtime/skills/` at each stage. These override Superpowers equivalents (e.g. do not substitute `superpowers:test-driven-development` for `tdd-workflow`).
 
 | Stage | Skill | Invocation |
 |---|---|---|
@@ -77,7 +83,7 @@ Use the skills in `.claude-guidelines/skills/` at each stage. These override Sup
 | Run backend tests (RSpec) | `rspec-runner` | `/rspec-runner` |
 | Write or update RSpec tests | `test-writer` | `/test-writer` |
 | Run unit tests for changed files | `unit-tester` | `/unit-tester` |
-| Full regression before alpha4 push | `regression-tester` | `/regression-tester` |
+| Regression tests (CI — runs automatically on alpha4 push) | `regression-tester` | N/A — CI only |
 | Smoke test after deploy | `smoke-tester` | `/smoke-tester` |
 | UI / frontend changes | `ux-tester` | `/ux-tester` |
 | Validate code against standards | `code-standards-check` | `/code-standards-check` |

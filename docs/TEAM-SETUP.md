@@ -28,7 +28,7 @@ claude --version  # Should load CLAUDE.md automatically
 
 ✅ **Done!** You now have access to:
 - `@.claude-guidelines/CLAUDE.md` — Project guidelines
-- Agents: `backend-agent`, `frontend-agent`, `tester-agent`
+- Agents: `backend-dev-agent`, `frontend-dev-agent`, `tester-agent`
 - Skills: `/code-standards-check`, `/tdd-workflow`, etc.
 - Standards: Code, testing, architecture docs
 
@@ -81,7 +81,7 @@ ls -la .claude-guidelines
 
 ```bash
 # Open Claude Code
-claude-code --agent backend-agent
+claude-code --agent backend-dev-agent
 
 # You should see guidelines loaded:
 # - CLAUDE.md context loaded
@@ -173,14 +173,14 @@ Then other developers just do `git pull` to get updates.
 
 After setup, you have access to:
 
-### **Agents** (`.claude-guidelines/agents/`)
-- `backend-agent` — Rails development
-- `frontend-agent` — Hotwire + Vue 3
+### **Agents** (`.claude-guidelines/runtime/agents/`)
+- `backend-dev-agent` — Rails development
+- `frontend-dev-agent` — Hotwire + Vue 3
 - `tester-agent` — Test strategy & QA
 
-**Invoke**: `claude-code --agent backend-agent`
+**Invoke**: `claude-code --agent backend-dev-agent`
 
-### **Skills** (`.claude-guidelines/skills/`)
+### **Skills** (`.claude-guidelines/runtime/skills/`)
 - `code-standards-check` — Validate code
 - `tdd-workflow` — Test-first development
 - `rspec-runner` — Backend testing
@@ -284,14 +284,14 @@ readlink .claude-guidelines
 
 ```bash
 # Verify guidelines are symlinked
-ls -la .claude-guidelines/skills/
+ls -la .claude-guidelines/runtime/skills/
 
 # Verify symlinks in .claude/commands/
 ls -la .claude/commands/
 
 # If missing, recreate them
 cd .claude/commands
-for file in ../.claude-guidelines/skills/*.md; do
+for file in ../../.claude-guidelines/runtime/skills/*.md; do
   ln -s "$file" "$(basename $file)"
 done
 ```
@@ -314,7 +314,7 @@ After setup, verify everything works:
 - [ ] Symlink created: `.claude-guidelines` → guidelines repo
 - [ ] Can read: `.claude-guidelines/CLAUDE.md` (should show project info)
 - [ ] Skills available: `/code-standards-check`, `/tdd-workflow`, etc.
-- [ ] Agents available: `claude-code --agent backend-agent` works
+- [ ] Agents available: `claude-code --agent backend-dev-agent` works
 - [ ] Can git pull: `cd ~/Documents/LocalProjects/circle-v2-agentic-guidelines && git pull` succeeds
 
 ✅ **All checked?** You're ready to code with the agentic system!
@@ -323,7 +323,7 @@ After setup, verify everything works:
 
 ## 📞 Support
 
-**Issue**: [Contact your Bryan]  
+**Issue**: [Contact your team lead]  
 **Suggestion**: Create PR in circle-v2-agentic-guidelines repo  
 **Emergency**: Use local `.claude/` config to override
 
@@ -334,6 +334,6 @@ After setup, verify everything works:
 1. **Complete setup** (this page)
 2. **Read CLAUDE.md** (project guidelines)
 3. **Read QUICK-START.md** (agent usage)
-4. **Try an agent**: `claude-code --agent backend-agent -p "Your task"`
+4. **Try an agent**: `claude-code --agent backend-dev-agent -p "Your task"`
 
 Welcome to the agentic workflow! 🚀

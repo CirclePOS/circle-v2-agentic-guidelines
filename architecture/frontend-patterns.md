@@ -1,6 +1,14 @@
 # Frontend Patterns
 
-## Turborepo Structure (`app/vue3/`)
+> **Note:** This document covers **Vue 3 (legacy) patterns** for maintenance and bug fixes on existing Vue layouts.
+>
+> **For new backoffice UI:** Use **Hotwire** (Rails views + Turbo/Stimulus). See `code-standards-hotwire.md` for Hotwire patterns, ViewComponent structure, and Stimulus controller standards.
+
+---
+
+## Vue 3 Patterns (Legacy)
+
+### Turborepo Structure (`app/vue3/`)
 
 ```
 app/vue3/
@@ -19,7 +27,7 @@ All packages referenced as `@repo/<name>`.
 
 ---
 
-## Feature Folder Pattern
+### Feature Folder Pattern (Vue 3)
 
 Every feature folder should contain:
 
@@ -59,7 +67,7 @@ export type ProductForm = z.infer<typeof productSchema>
 
 ---
 
-## API Module Pattern (`@repo/api`)
+### API Module Pattern (`@repo/api`, Vue 3)
 
 ```typescript
 // packages/api/src/products/index.ts
@@ -85,7 +93,7 @@ Rules:
 
 ---
 
-## Authentication Flow
+### Authentication Flow (Vue 3)
 
 | Context | Method |
 |---------|--------|
@@ -94,7 +102,7 @@ Rules:
 
 ---
 
-## Pinia Store Pattern
+### Pinia Store Pattern (Vue 3)
 
 ```typescript
 export const useProductStore = defineStore('products', () => {
@@ -114,7 +122,7 @@ export const useProductStore = defineStore('products', () => {
 
 ---
 
-## Shared Composables (`@repo/composables`)
+### Shared Composables (`@repo/composables`, Vue 3)
 
 Common composables available across apps:
 - `useHandleAxiosError` — standardised error handling
